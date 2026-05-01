@@ -1,9 +1,11 @@
 // Sharing logic
 async function loadSharedUsers() {
+    const currentUser = (await supabase.auth.getUser()).data.user;
+    // I'm sharing with these users
     const { data, error } = await supabase
         .from('shared_access')
-        .select('*, shared_user:auth.users!shared_with_user_id(email)')
-        .eq('owner_id', (await supabase.auth.getUser()).data.user.id);
+        .select('*, shared_with_email')
+        .eq('owner_id', currentUser.id);
     
     if (error) {
         console.error('Error loading shared users:', error);

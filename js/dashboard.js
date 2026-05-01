@@ -17,23 +17,11 @@ async function initDashboard() {
 }
 
 async function setupSharing() {
-    // Load users who shared with me
-    const sharedData = await loadAvailableSharedData();
-    const sharedUsersList = document.getElementById('sharedUsersList');
+    // Load users I'm sharing with
+    await loadSharedUsersList();
     
-    if (sharedData.length === 0) {
-        sharedUsersList.innerHTML = '<p class="text-muted">Nenhum dado compartilhado</p>';
-    } else {
-        sharedUsersList.innerHTML = sharedData.map(item => `
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="dataView" id="viewShared${item.owner.id}" 
-                       onchange="switchToShared('${item.owner.id}', '${item.owner.email}')">
-                <label class="form-check-label" for="viewShared${item.owner.id}">
-                    ${item.owner.email}
-                </label>
-            </div>
-        `).join('');
-    }
+    // Load users who shared with me
+    await loadAvailableSharedUsers();
     
     // Setup share button
     document.getElementById('shareBtn').addEventListener('click', async () => {
@@ -57,6 +45,25 @@ async function setupSharing() {
             loadDashboardData();
         }
     });
+}
+
+async function loadAvailableSharedUsers() {
+    const sharedData = await loadAvailableSharedData();
+    const sharedUsersList = document.getElementById('sharedUsersList');
+    
+    if (sharedData.length === 0) {
+        sharedUsersList.innerHTML = '<p class="text-muted">Nenhum dado compartilhado</p>';
+    } else {
+        sharedUsersList.innerHTML = sharedData.map(item => `
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="dataView" id="viewShared${item.owner.id}" 
+                       onchange="switchToShared('${item.owner.id}', '${item.owner.email}')">
+                <label class="form-check-label" for="viewShared${item.owner.id}">
+                    ${item.owner.email}
+                </label>
+            </div>
+        `).join('');
+    }
 }
 
 async function switchToShared(userId, email) {
