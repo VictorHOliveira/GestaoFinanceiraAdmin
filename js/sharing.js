@@ -15,12 +15,25 @@ async function loadSharedUsers() {
 async function shareWithEmail(email) {
     const currentUser = (await supabase.auth.getUser()).data.user;
     
+    // Try to find user ID by email (if user already exists)
+    const { data: existingUsers, error: searchError } = await supabase
+        .from('shared_access')
+        .select('shared_with_user_id')
+        .eq('shared_with_email', email)
+        .limit(1);
+    
+    let sharedWithUserId = null;
+    if (!searchError && existingUsers && existingUsers.length > 0) {
+        sharedWithUserId = existingUsers[0].shared_with_user_id;
+    }
+    
     // Add sharing
     const { data, error } = await supabase
         .from('shared_access')
         .insert([{
             owner_id: currentUser.id,
-            shared_with_email: email
+            shared_with_email: email,
+            shared_with_user_id: sharedWithUserId
         }])
         .select();
     
