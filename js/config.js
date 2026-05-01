@@ -2,8 +2,14 @@
 const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
 
-// Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabaseClient = null;
+
+function getSupabase() {
+    if (!supabaseClient && window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+    return supabaseClient;
+}
 
 // Categories
 const CATEGORIES = [
