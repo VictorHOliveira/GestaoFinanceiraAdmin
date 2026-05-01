@@ -10,10 +10,21 @@ async function checkAuth() {
 }
 
 // Logout
-async function logout() {
+window.logout = async function() {
     await supabase.auth.signOut();
     window.location.href = '/login.html';
 }
+
+// Setup logout button when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.logout();
+        });
+    }
+});
 
 // Formatar moeda
 function formatCurrency(value) {
