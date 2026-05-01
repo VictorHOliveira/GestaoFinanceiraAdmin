@@ -1,21 +1,20 @@
-// Configuração do Supabase
-// Substitua pelos valores do seu projeto no Supabase (https://app.supabase.com)
+// Supabase config
 const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
 
-// Inicializar cliente Supabase
+// Initialize Supabase client
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Categorias
+// Categories
 const CATEGORIES = [
     "Moradia (Aluguer/Hipoteca)",
-    "Alimentação (Supermercado/Restaurantes)",
-    "Transporte (Combustível/Transportes Públicos)",
-    "Contas (Água/Eletricidade/Gás/Internet)",
-    "Saúde (Médico/Farmácia)",
-    "Educação (Propinas/Cursos)",
+    "Alimentacao (Supermercado/Restaurantes)",
+    "Transporte (Combustivel/Transportes Publicos)",
+    "Contas (Agua/Eletricidade/Gas/Internet)",
+    "Saude (Medico/Farmacia)",
+    "Educacao (Propinas/Cursos)",
     "Lazer (Cinema/Viagens/Hobbies)",
-    "Compras (Roupa/Eletrónicos)",
+    "Compras (Roupa/Eletronicos)",
     "Outros"
 ];
 
