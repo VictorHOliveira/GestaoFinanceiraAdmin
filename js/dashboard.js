@@ -39,7 +39,7 @@ async function setupSharing() {
     document.getElementById('shareBtn').addEventListener('click', async () => {
         const email = document.getElementById('shareEmail').value;
         if (!email) {
-            showMessage('Insira um email válido', 'warning');
+            showMessage('Insira um email valido', 'warning');
             return;
         }
         const success = await shareWithEmail(email);
