@@ -11,7 +11,19 @@ async function checkAuth() {
 
 // Logout
 window.logout = async function() {
-    await supabase.auth.signOut();
+    if (typeof supabase !== 'undefined' && supabase.auth) {
+        await supabase.auth.signOut();
+    } else {
+        console.error('Supabase not available for logout');
+        // Try to initialize supabase if not available
+        if (window.supabase) {
+            supabase = window.supabase.createClient(
+                'https://rpwekhubjuxplqxxsahe.supabase.co',
+                'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw'
+            );
+            await supabase.auth.signOut();
+        }
+    }
     window.location.href = '/login.html';
 }
 
@@ -57,9 +69,11 @@ function showMessage(message, type = 'success') {
 
 // Carregar despesas
 async function loadExpenses() {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
         .from('expenses')
         .select('*')
+        .eq('user_id', user.id)
         .order('expense_date', { ascending: false });
     
     if (error) {
@@ -71,9 +85,11 @@ async function loadExpenses() {
 
 // Carregar rendimentos
 async function loadIncome() {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
         .from('income')
         .select('*')
+        .eq('user_id', user.id)
         .order('income_date', { ascending: false });
     
     if (error) {
