@@ -33,7 +33,7 @@ async function initAddExpense() {
         const result = await addExpense(expense);
         if (result) {
             setTimeout(() => {
-                window.location.href = '/admin/expenses.html';
+                window.location.href = '/expenses.html';
             }, 1000);
         }
     });

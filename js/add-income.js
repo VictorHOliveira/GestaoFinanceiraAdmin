@@ -33,7 +33,7 @@ async function initAddIncome() {
         const result = await addIncome(income);
         if (result) {
             setTimeout(() => {
-                window.location.href = '/admin/income.html';
+                window.location.href = '/income.html';
             }, 1000);
         }
     });
