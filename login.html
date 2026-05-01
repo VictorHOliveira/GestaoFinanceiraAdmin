@@ -42,7 +42,11 @@
         const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
         if (window.supabase) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    redirectTo: 'https://admin.qaoverflow.com/login.html'
+                }
+            });
             console.log('Supabase client created:', typeof supabase);
         } else {
             console.error('Supabase library not loaded!');
