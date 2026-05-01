@@ -4,7 +4,7 @@
 async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/login.html';
     }
     return session;
 }
@@ -12,7 +12,7 @@ async function checkAuth() {
 // Logout
 async function logout() {
     await supabase.auth.signOut();
-    window.location.href = '/admin/login.html';
+    window.location.href = '/login.html';
 }
 
 // Formatar moeda
