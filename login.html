@@ -42,7 +42,7 @@
         const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
         if (window.supabase) {
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('Supabase client created:', typeof supabase);
         } else {
             console.error('Supabase library not loaded!');
