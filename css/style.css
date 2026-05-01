@@ -1,0 +1,86 @@
+/* Gestão Financeira - Estilos */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    border: none;
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.03);
+}
+
+canvas {
+    max-height: 300px;
+}
+
+/* Login e Register pages */
+.card.shadow {
+    border: none;
+    border-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    h2, h3, h5 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Navigation active state */
+.navbar-nav .nav-link.active {
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* Money values */
+.text-success {
+    font-weight: 600;
+}
+
+.text-danger {
+    font-weight: 600;
+}
