@@ -47,12 +47,15 @@ body {
 
 .table {
     color: #e0e0e0;
+    background-color: #1e1e1e;
 }
 
 .table th {
     border-top: none;
     font-weight: 600;
     color: #e0e0e0;
+    background-color: #2d2d2d;
+    border-color: #404040;
 }
 
 .table td {
@@ -62,6 +65,21 @@ body {
 
 .table-hover tbody tr:hover {
     background-color: rgba(255,255,255,.05);
+}
+
+.table-dark {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.table-dark th, .table-dark td {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+tfoot.table-dark {
+    background-color: #2d2d2d !important;
 }
 
 .alert {
