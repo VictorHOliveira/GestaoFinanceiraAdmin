@@ -105,40 +105,51 @@ async function loadDashboardData() {
         const now = getCurrentMonth();
         const { start, end } = getMonthRange(now.year, now.month);
         
-        let expensesByCategory, incomeByCategory;
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        let expensesPromise, incomePromise, recentExpensesPromise, recentIncomePromise;
         
         if (currentView === 'shared' && selectedSharedUser) {
-            // Load shared user's data
-            const { data: expenses, error: expError } = await supabase
-                .from('expenses')
-                .select('category, amount')
-                .eq('user_id', selectedSharedUser);
-            
-            const { data: income, error: incError } = await supabase
-                .from('income')
-                .select('category, amount')
-                .eq('user_id', selectedSharedUser);
-            
-            if (expError) console.error('Error loading shared expenses:', expError);
-            if (incError) console.error('Error loading shared income:', incError);
-            
-            expensesByCategory = {};
-            if (expenses) {
-                expenses.forEach(item => {
-                    expensesByCategory[item.category] = (expensesByCategory[item.category] || 0) + parseFloat(item.amount);
-                });
-            }
-            
-            incomeByCategory = {};
-            if (income) {
-                income.forEach(item => {
-                    incomeByCategory[item.category] = (incomeByCategory[item.category] || 0) + parseFloat(item.amount);
-                });
-            }
+            expensesPromise = supabase.from('expenses').select('category, amount').eq('user_id', selectedSharedUser);
+            incomePromise = supabase.from('income').select('category, amount').eq('user_id', selectedSharedUser);
+            recentExpensesPromise = supabase.from('expenses').select('*').eq('user_id', selectedSharedUser).order('expense_date', { ascending: false }).limit(5);
+            recentIncomePromise = supabase.from('income').select('*').eq('user_id', selectedSharedUser).order('income_date', { ascending: false }).limit(5);
         } else {
-            // Load personal data
-            expensesByCategory = await getExpensesByCategory(start, end);
-            incomeByCategory = await getIncomeByCategory(start, end);
+            expensesPromise = supabase.from('expenses').select('category, amount').eq('user_id', user.id).gte('expense_date', start).lte('expense_date', end);
+            incomePromise = supabase.from('income').select('category, amount').eq('user_id', user.id).gte('income_date', start).lte('income_date', end);
+            recentExpensesPromise = supabase.from('expenses').select('*').eq('user_id', user.id).order('expense_date', { ascending: false }).limit(5);
+            recentIncomePromise = supabase.from('income').select('*').eq('user_id', user.id).order('income_date', { ascending: false }).limit(5);
+        }
+        
+        const [expResult, incResult, recentExpResult, recentIncResult] = await Promise.all([
+            expensesPromise,
+            incomePromise,
+            recentExpensesPromise,
+            recentIncomePromise
+        ]);
+        
+        const { data: expenses, error: expError } = expResult;
+        const { data: income, error: incError } = incResult;
+        const { data: recentExpenses, error: recentExpError } = recentExpResult;
+        const { data: recentIncome, error: recentIncError } = recentIncResult;
+        
+        if (expError) console.error('Error loading expenses:', expError);
+        if (incError) console.error('Error loading income:', incError);
+        if (recentExpError) console.error('Error loading recent expenses:', recentExpError);
+        if (recentIncError) console.error('Error loading recent income:', recentIncError);
+        
+        const expensesByCategory = {};
+        if (expenses) {
+            expenses.forEach(item => {
+                expensesByCategory[item.category] = (expensesByCategory[item.category] || 0) + parseFloat(item.amount);
+            });
+        }
+        
+        const incomeByCategory = {};
+        if (income) {
+            income.forEach(item => {
+                incomeByCategory[item.category] = (incomeByCategory[item.category] || 0) + parseFloat(item.amount);
+            });
         }
         
         const totalExpenses = Object.values(expensesByCategory).reduce((a, b) => a + b, 0);
@@ -149,25 +160,11 @@ async function loadDashboardData() {
         document.getElementById('monthlyExpenses').textContent = formatCurrency(totalExpenses);
         document.getElementById('monthlyBalance').textContent = formatCurrency(balance);
         
-        // Load recent expenses
-        let expensesQuery = supabase.from('expenses').select('*');
-        if (currentView === 'shared' && selectedSharedUser) {
-            expensesQuery = expensesQuery.eq('user_id', selectedSharedUser);
-        } else {
-            const { data: { user } } = await supabase.auth.getUser();
-            expensesQuery = expensesQuery.eq('user_id', user.id);
-        }
-        const { data: expenses, error: expError } = await expensesQuery
-            .order('expense_date', { ascending: false })
-            .limit(5);
-        
-        if (expError) console.error('Error loading recent expenses:', expError);
-        
         const recentExpensesDiv = document.getElementById('recentExpenses');
-        if (!expenses || expenses.length === 0) {
+        if (!recentExpenses || recentExpenses.length === 0) {
             recentExpensesDiv.innerHTML = '<p class="text-muted">Nenhuma despesa registada</p>';
         } else {
-            const html = expenses.map(exp => `
+            const html = recentExpenses.map(exp => `
                 <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                     <div>
                         <strong>${exp.category}</strong><br>
@@ -179,25 +176,11 @@ async function loadDashboardData() {
             recentExpensesDiv.innerHTML = html;
         }
         
-        // Load recent income
-        let incomeQuery = supabase.from('income').select('*');
-        if (currentView === 'shared' && selectedSharedUser) {
-            incomeQuery = incomeQuery.eq('user_id', selectedSharedUser);
-        } else {
-            const { data: { user } } = await supabase.auth.getUser();
-            incomeQuery = incomeQuery.eq('user_id', user.id);
-        }
-        const { data: income, error: incError } = await incomeQuery
-            .order('income_date', { ascending: false })
-            .limit(5);
-        
-        if (incError) console.error('Error loading recent income:', incError);
-        
         const recentIncomeDiv = document.getElementById('recentIncome');
-        if (!income || income.length === 0) {
+        if (!recentIncome || recentIncome.length === 0) {
             recentIncomeDiv.innerHTML = '<p class="text-muted">Nenhum rendimento registado</p>';
         } else {
-            const html = income.map(inc => `
+            const html = recentIncome.map(inc => `
                 <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                     <div>
                         <strong>${inc.category}</strong><br>

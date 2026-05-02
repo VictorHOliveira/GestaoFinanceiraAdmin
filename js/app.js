@@ -162,7 +162,6 @@ async function deleteIncome(id) {
 // Obter totais por categoria (despesas)
 async function getExpensesByCategory(startDate = null, endDate = null) {
     const { data: { user } } = await supabase.auth.getUser();
-    console.log('Loading expenses for user:', user.id);
     let query = supabase
         .from('expenses')
         .select('category, amount')
@@ -173,24 +172,18 @@ async function getExpensesByCategory(startDate = null, endDate = null) {
     
     const { data, error } = await query;
     
-    if (error) {
-        console.error('Error loading expenses by category:', error);
-        return {};
-    }
+    if (error) return {};
     
-    console.log('Expenses data:', data);
     const totals = {};
     data.forEach(item => {
         totals[item.category] = (totals[item.category] || 0) + parseFloat(item.amount);
     });
-    console.log('Expenses totals:', totals);
     return totals;
 }
 
 // Obter totais por categoria (rendimentos)
 async function getIncomeByCategory(startDate = null, endDate = null) {
     const { data: { user } } = await supabase.auth.getUser();
-    console.log('Loading income for user:', user.id);
     let query = supabase
         .from('income')
         .select('category, amount')
@@ -201,17 +194,12 @@ async function getIncomeByCategory(startDate = null, endDate = null) {
     
     const { data, error } = await query;
     
-    if (error) {
-        console.error('Error loading income by category:', error);
-        return {};
-    }
+    if (error) return {};
     
-    console.log('Income data:', data);
     const totals = {};
     data.forEach(item => {
         totals[item.category] = (totals[item.category] || 0) + parseFloat(item.amount);
     });
-    console.log('Income totals:', totals);
     return totals;
 }
 
