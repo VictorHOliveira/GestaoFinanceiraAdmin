@@ -64,9 +64,11 @@ async function removeSharing(shareId) {
 }
 
 async function loadAvailableSharedData() {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
         .from('shared_access')
-        .select('*, owner:auth.users!owner_id(email)')
+        .select('*, owner_id')
+        .eq('shared_with_user_id', user.id)
         .not('shared_with_user_id', 'is', null);
     
     if (error) {

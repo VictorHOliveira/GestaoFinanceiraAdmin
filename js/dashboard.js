@@ -56,10 +56,10 @@ async function loadAvailableSharedUsers() {
     } else {
         sharedUsersList.innerHTML = sharedData.map(item => `
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="dataView" id="viewShared${item.owner.id}" 
-                       onchange="switchToShared('${item.owner.id}', '${item.owner.email}')">
-                <label class="form-check-label" for="viewShared${item.owner.id}">
-                    ${item.owner.email}
+                <input class="form-check-input" type="radio" name="dataView" id="viewShared${item.owner_id}" 
+                       onchange="switchToShared('${item.owner_id}', '${item.owner_id}')">
+                <label class="form-check-label" for="viewShared${item.owner_id}">
+                    Utilizador ${item.owner_id.substring(0, 8)}...
                 </label>
             </div>
         `).join('');
