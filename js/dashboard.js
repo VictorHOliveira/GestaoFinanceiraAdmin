@@ -1,7 +1,4 @@
 // Dashboard logic
-let currentView = 'personal'; // 'personal' or 'shared'
-let selectedSharedUser = null;
-
 async function initDashboard() {
     const session = await checkAuth();
     if (!session) return;
@@ -9,95 +6,8 @@ async function initDashboard() {
     // Setup logout
     document.getElementById('logoutBtn').addEventListener('click', logout);
     
-    // Setup sharing
-    await setupSharing();
-    
     // Load dashboard data
     await loadDashboardData();
-}
-
-async function setupSharing() {
-    // Load users I'm sharing with
-    await loadSharedUsersList();
-    
-    // Load users who shared with me
-    await loadAvailableSharedUsers();
-    
-    // Setup share button
-    document.getElementById('shareBtn').addEventListener('click', async () => {
-        const email = document.getElementById('shareEmail').value;
-        if (!email) {
-            showMessage('Insira um email valido', 'warning');
-            return;
-        }
-        const success = await shareWithEmail(email);
-        if (success) {
-            document.getElementById('shareEmail').value = '';
-            await loadSharedUsersList();
-        }
-    });
-    
-    // Setup personal data radio
-    document.getElementById('viewPersonal').addEventListener('change', () => {
-        if (document.getElementById('viewPersonal').checked) {
-            currentView = 'personal';
-            selectedSharedUser = null;
-            loadDashboardData();
-        }
-    });
-}
-
-async function loadAvailableSharedUsers() {
-    const sharedData = await loadAvailableSharedData();
-    const sharedUsersList = document.getElementById('sharedUsersList');
-    
-    if (sharedData.length === 0) {
-        sharedUsersList.innerHTML = '<p class="text-muted">Nenhum dado compartilhado</p>';
-    } else {
-        sharedUsersList.innerHTML = sharedData.map(item => `
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="dataView" id="viewShared${item.owner_id}" 
-                       onchange="switchToShared('${item.owner_id}', '${item.owner_id}')">
-                <label class="form-check-label" for="viewShared${item.owner_id}">
-                    Utilizador ${item.owner_id.substring(0, 8)}...
-                </label>
-            </div>
-        `).join('');
-    }
-}
-
-async function switchToShared(userId, email) {
-    currentView = 'shared';
-    selectedSharedUser = userId;
-    showMessage('A ver dados de: ' + email, 'info');
-    await loadDashboardData();
-}
-
-async function loadSharedUsersList() {
-    const sharedUsers = await loadSharedUsers();
-    const sharedList = document.getElementById('sharedList');
-    
-    if (sharedUsers.length === 0) {
-        sharedList.innerHTML = '<p class="text-muted">Nenhum compartilhamento ativo</p>';
-    } else {
-        sharedList.innerHTML = sharedUsers.map(item => `
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                <span>${item.shared_with_email}</span>
-                <button class="btn btn-sm btn-danger" onclick="handleRemoveShare(${item.id})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        `).join('');
-    }
-}
-
-async function handleRemoveShare(shareId) {
-    if (confirm('Tem certeza que deseja remover este compartilhamento?')) {
-        const success = await removeSharing(shareId);
-        if (success) {
-            await loadSharedUsersList();
-        }
-    }
 }
 
 async function loadDashboardData() {
@@ -107,19 +17,11 @@ async function loadDashboardData() {
         
         const { data: { user } } = await supabase.auth.getUser();
         
-        let expensesPromise, incomePromise, recentExpensesPromise, recentIncomePromise;
-        
-        if (currentView === 'shared' && selectedSharedUser) {
-            expensesPromise = supabase.from('expenses').select('category, amount').eq('user_id', selectedSharedUser);
-            incomePromise = supabase.from('income').select('category, amount').eq('user_id', selectedSharedUser);
-            recentExpensesPromise = supabase.from('expenses').select('*').eq('user_id', selectedSharedUser).order('expense_date', { ascending: false }).limit(5);
-            recentIncomePromise = supabase.from('income').select('*').eq('user_id', selectedSharedUser).order('income_date', { ascending: false }).limit(5);
-        } else {
-            expensesPromise = supabase.from('expenses').select('category, amount').eq('user_id', user.id).gte('expense_date', start).lte('expense_date', end);
-            incomePromise = supabase.from('income').select('category, amount').eq('user_id', user.id).gte('income_date', start).lte('income_date', end);
-            recentExpensesPromise = supabase.from('expenses').select('*').eq('user_id', user.id).order('expense_date', { ascending: false }).limit(5);
-            recentIncomePromise = supabase.from('income').select('*').eq('user_id', user.id).order('income_date', { ascending: false }).limit(5);
-        }
+        // Load totals by category (personal data only)
+        const expensesPromise = supabase.from('expenses').select('category, amount').eq('user_id', user.id).gte('expense_date', start).lte('expense_date', end);
+        const incomePromise = supabase.from('income').select('category, amount').eq('user_id', user.id).gte('income_date', start).lte('income_date', end);
+        const recentExpensesPromise = supabase.from('expenses').select('*').eq('user_id', user.id).order('expense_date', { ascending: false }).limit(5);
+        const recentIncomePromise = supabase.from('income').select('*').eq('user_id', user.id).order('income_date', { ascending: false }).limit(5);
         
         const [expResult, incResult, recentExpResult, recentIncResult] = await Promise.all([
             expensesPromise,
