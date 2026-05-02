@@ -1,32 +1,105 @@
-/* Gestão Financeira - Estilos */
+/* Gestão Financeira - Estilos Dark Mode */
 body {
-    background-color: #f8f9fa;
+    background-color: #121212;
+    color: #e0e0e0;
     min-height: 100vh;
 }
 
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    background-color: #1f1f1f !important;
+}
+
+.navbar-brand, .nav-link {
+    color: #e0e0e0 !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #ffffff !important;
+    text-decoration: underline;
 }
 
 .card {
-    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    background-color: #1e1e1e;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
     border: none;
     margin-bottom: 1rem;
+    color: #e0e0e0;
 }
 
 .card-header {
-    background-color: #fff;
-    border-bottom: 2px solid #f0f0f0;
+    background-color: #2d2d2d !important;
+    border-bottom: 2px solid #404040;
+    color: #e0e0e0;
+}
+
+.card.bg-success {
+    background-color: #198754 !important;
+}
+
+.card.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.card.bg-info {
+    background-color: #0dcaf0 !important;
+}
+
+.table {
+    color: #e0e0e0;
 }
 
 .table th {
     border-top: none;
     font-weight: 600;
-    color: #495057;
+    color: #e0e0e0;
+}
+
+.table td {
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255,255,255,.05);
 }
 
 .alert {
     border-radius: 8px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+.alert-success {
+    background-color: #0f5132;
+    color: #d1e7dd;
+    border-color: #0f5132;
+}
+
+.alert-danger {
+    background-color: #58151c;
+    color: #f8d7da;
+    border-color: #58151c;
+}
+
+.alert-warning {
+    background-color: #664d03;
+    color: #fff3cd;
+    border-color: #664d03;
+}
+
+.form-control, .form-select {
+    background-color: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    background-color: #2d2d2d;
+    color: #e0e0e0;
 }
 
 .btn-primary {
@@ -39,8 +112,18 @@ body {
     border-color: #0a58ca;
 }
 
-.table-hover tbody tr:hover {
-    background-color: rgba(0,0,0,.03);
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-success {
+    font-weight: 600;
+    color: #198754 !important;
+}
+
+.text-danger {
+    font-weight: 600;
+    color: #dc3545 !important;
 }
 
 canvas {
@@ -51,11 +134,8 @@ canvas {
 .card.shadow {
     border: none;
     border-radius: 10px;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
 /* Responsive adjustments */
@@ -68,19 +148,4 @@ canvas {
     h2, h3, h5 {
         font-size: 1.2rem;
     }
-}
-
-/* Navigation active state */
-.navbar-nav .nav-link.active {
-    font-weight: 600;
-    text-decoration: underline;
-}
-
-/* Money values */
-.text-success {
-    font-weight: 600;
-}
-
-.text-danger {
-    font-weight: 600;
 }
