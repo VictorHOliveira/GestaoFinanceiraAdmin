@@ -149,6 +149,9 @@ async function loadDashboardData() {
     let expensesQuery = supabase.from('expenses').select('*');
     if (currentView === 'shared' && selectedSharedUser) {
         expensesQuery = expensesQuery.eq('user_id', selectedSharedUser);
+    } else {
+        const { data: { user } } = await supabase.auth.getUser();
+        expensesQuery = expensesQuery.eq('user_id', user.id);
     }
     const { data: expenses, error: expError } = await expensesQuery
         .order('expense_date', { ascending: false })
@@ -174,6 +177,9 @@ async function loadDashboardData() {
     let incomeQuery = supabase.from('income').select('*');
     if (currentView === 'shared' && selectedSharedUser) {
         incomeQuery = incomeQuery.eq('user_id', selectedSharedUser);
+    } else {
+        const { data: { user } } = await supabase.auth.getUser();
+        incomeQuery = incomeQuery.eq('user_id', user.id);
     }
     const { data: income, error: incError } = await incomeQuery
         .order('income_date', { ascending: false })

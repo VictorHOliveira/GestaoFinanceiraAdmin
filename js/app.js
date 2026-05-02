@@ -161,9 +161,11 @@ async function deleteIncome(id) {
 
 // Obter totais por categoria (despesas)
 async function getExpensesByCategory(startDate = null, endDate = null) {
+    const { data: { user } } = await supabase.auth.getUser();
     let query = supabase
         .from('expenses')
-        .select('category, amount');
+        .select('category, amount')
+        .eq('user_id', user.id);
     
     if (startDate) query = query.gte('expense_date', startDate);
     if (endDate) query = query.lte('expense_date', endDate);
@@ -181,9 +183,11 @@ async function getExpensesByCategory(startDate = null, endDate = null) {
 
 // Obter totais por categoria (rendimentos)
 async function getIncomeByCategory(startDate = null, endDate = null) {
+    const { data: { user } } = await supabase.auth.getUser();
     let query = supabase
         .from('income')
-        .select('category, amount');
+        .select('category, amount')
+        .eq('user_id', user.id);
     
     if (startDate) query = query.gte('income_date', startDate);
     if (endDate) query = query.lte('income_date', endDate);
