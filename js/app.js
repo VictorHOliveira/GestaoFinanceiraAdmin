@@ -15,12 +15,8 @@ window.logout = async function() {
         await supabase.auth.signOut();
     } else {
         console.error('Supabase not available for logout');
-        // Try to initialize supabase if not available
-        if (window.supabase) {
-            supabase = window.supabase.createClient(
-                'https://rpwekhubjuxplqxxsahe.supabase.co',
-                'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw'
-            );
+        if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             await supabase.auth.signOut();
         }
     }

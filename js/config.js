@@ -1,4 +1,6 @@
-// Categories
+const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
+
 const CATEGORIES = [
     "Moradia (Aluguer/Hipoteca)",
     "Alimentacao (Supermercado/Restaurantes)",

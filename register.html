@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registo - Gestão Financeira</title>
+    <title>Registo - Gest?o Financeira</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card shadow bg-dark text-light border-secondary">
                     <div class="card-body">
-                        <h3 class="card-title text-center mb-4">Gestão Financeira</h3>
+                        <h3 class="card-title text-center mb-4">Gest?o Financeira</h3>
                         <h5 class="card-subtitle mb-3 text-muted text-center">Registo</h5>
                         <div id="alert-container"></div>
                         <form id="registerForm">
@@ -24,7 +24,7 @@
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" required minlength="8">
-                                <div class="form-text">Mínimo 8 caracteres</div>
+                                <div class="form-text">M?nimo 8 caracteres</div>
                             </div>
                             <div class="mb-3">
                                 <label for="confirmPassword" class="form-label">Confirmar Password</label>
@@ -33,7 +33,7 @@
                             <button type="submit" class="btn btn-primary w-100">Registar</button>
                         </form>
                         <div class="mt-3 text-center">
-                            <a href="/login.html">Já tem conta? Faça login</a>
+                            <a href="/login.html">J? tem conta? Fa?a login</a>
                         </div>
                     </div>
                 </div>
@@ -42,11 +42,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/js/config.js"></script>
     <script>
         console.log('Supabase loaded:', typeof window.supabase);
-        const SUPABASE_URL = 'https://rpwekhubjuxplqxxsahe.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_lUBv2zvpGlFXHUqgui71lA_nazavnWw';
-        if (window.supabase) {
+        if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 auth: {
                     redirectTo: 'https://admin.qaoverflow.com/login.html'
@@ -54,7 +53,7 @@
             });
             console.log('Supabase client created:', typeof supabase);
         } else {
-            console.error('Supabase library not loaded!');
+            console.error('Supabase library or config not loaded!');
         }
     </script>
     <script src="/js/register.js"></script>
